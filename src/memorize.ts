@@ -155,8 +155,8 @@ export default async function memorize(props: LaunchProps<{ arguments: Arguments
 
   // --- Feedback ---
   if (created) {
-    await showHUD("🟢 Note added to new daily note");
+    await showHUD("🔵 New daily note created successfully");
   } else {
-    await showHUD("🔵 Note added to daily note");
+    await showHUD("🟢 Note added to daily note successfully");
   }
 }
