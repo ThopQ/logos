@@ -20,6 +20,7 @@
     {
       "name": "memorize",
       "title": "Memorize",
+      "subtitle": "Capture Note",
       "description": "Quickly capture a timestamped note into today's daily note",
       "mode": "no-view",
       "arguments": [
