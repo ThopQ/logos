@@ -75,7 +75,7 @@ export default async function task(props: LaunchProps<{ arguments: Arguments }>)
       content += "\n";
     }
 
-    content += todoLine + "\n\n" + SEPARATOR + "\n";
+    content += todoLine + "\n\n" + SEPARATOR + "\n\n";
     writeFileSync(filePath, content, "utf-8");
   } else {
     // Existing daily note — insert todo before the separator
@@ -88,7 +88,7 @@ export default async function task(props: LaunchProps<{ arguments: Arguments }>)
       // Insert the todo line before the separator
       // Ensure there's a blank line between the last todo and the separator
       const beforeSep = lines.slice(0, sepIdx);
-      const afterSep = lines.slice(sepIdx);
+      const afterSep = lines.slice(sepIdx); // afterSep[0] is "---"
 
       // Remove trailing blank lines before separator to normalize
       while (beforeSep.length > 0 && beforeSep[beforeSep.length - 1].trim() === "") {
@@ -98,17 +98,19 @@ export default async function task(props: LaunchProps<{ arguments: Arguments }>)
       beforeSep.push(todoLine);
       beforeSep.push(""); // blank line before separator
 
+      // Ensure blank line after separator
+      // afterSep[0] is "---"; if afterSep[1] is not blank, insert one
+      if (afterSep.length > 1 && afterSep[1].trim() !== "") {
+        afterSep.splice(1, 0, "");
+      }
+
       const newContent = [...beforeSep, ...afterSep].join("\n");
       writeFileSync(filePath, newContent, "utf-8");
     } else {
       // No separator found — existing content is treated as notes below the separator
       // Rewrite: todo on top, then separator, then existing content
-      let newContent = todoLine + "\n\n" + SEPARATOR + "\n";
-      if (existing.trim().length > 0) {
-        // Ensure existing content starts cleanly after the separator
-        const trimmedExisting = existing.startsWith("\n") ? existing : "\n" + existing;
-        newContent = todoLine + "\n\n" + SEPARATOR + trimmedExisting;
-      }
+      const trimmedExisting = existing.replace(/^\n*/, "\n\n");
+      const newContent = todoLine + "\n\n" + SEPARATOR + trimmedExisting;
       writeFileSync(filePath, newContent, "utf-8");
     }
   }

@@ -76,7 +76,7 @@ export default async function memorize(props: LaunchProps<{ arguments: Arguments
     }
 
     // Add separator so todos (from the Task command) can go above it
-    content += "---\n";
+    content += "---\n\n";
     content += entry + "\n";
     writeFileSync(filePath, content, "utf-8");
   } else {
