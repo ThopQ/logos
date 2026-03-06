@@ -1,7 +1,7 @@
 import { LaunchProps, getPreferenceValues, showHUD } from "@raycast/api";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, appendFileSync, statSync } from "fs";
 import { join } from "path";
-import { Preferences, formatDate } from "./shared";
+import { Preferences, formatDate, processTemplate } from "./shared";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -10,32 +10,6 @@ import { Preferences, formatDate } from "./shared";
 interface Arguments {
   text: string;
   tags?: string;
-}
-
-// ---------------------------------------------------------------------------
-// Template processing (Obsidian-compatible variables)
-// ---------------------------------------------------------------------------
-
-function processTemplate(template: string, filename: string, date: Date): string {
-  let result = template;
-
-  // {{title}} -> filename without extension
-  result = result.replace(/\{\{title\}\}/g, filename.replace(/\.md$/, ""));
-
-  // {{date:FORMAT}} -> formatted date with custom format
-  result = result.replace(/\{\{date:([^}]+)\}\}/g, (_, fmt) => formatDate(fmt, date));
-
-  // {{date}} -> formatted date using the filename template (preference)
-  const prefs = getPreferenceValues<Preferences>();
-  result = result.replace(/\{\{date\}\}/g, formatDate(prefs.filenameTemplate, date));
-
-  // {{time:FORMAT}} -> formatted time with custom format
-  result = result.replace(/\{\{time:([^}]+)\}\}/g, (_, fmt) => formatDate(fmt, date));
-
-  // {{time}} -> HH:mm
-  result = result.replace(/\{\{time\}\}/g, formatDate("HH:mm", date));
-
-  return result;
 }
 
 // ---------------------------------------------------------------------------
@@ -101,6 +75,8 @@ export default async function memorize(props: LaunchProps<{ arguments: Arguments
       content += "\n";
     }
 
+    // Add separator so todos (from the Task command) can go above it
+    content += "---\n";
     content += entry + "\n";
     writeFileSync(filePath, content, "utf-8");
   } else {

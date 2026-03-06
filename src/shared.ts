@@ -1,3 +1,5 @@
+import { getPreferenceValues } from "@raycast/api";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -43,5 +45,31 @@ export function formatDate(template: string, date: Date): string {
   for (const [pattern, value] of replacements) {
     result = result.replace(pattern, value);
   }
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Template processing (Obsidian-compatible variables)
+// ---------------------------------------------------------------------------
+
+export function processTemplate(template: string, filename: string, date: Date): string {
+  let result = template;
+
+  // {{title}} -> filename without extension
+  result = result.replace(/\{\{title\}\}/g, filename.replace(/\.md$/, ""));
+
+  // {{date:FORMAT}} -> formatted date with custom format
+  result = result.replace(/\{\{date:([^}]+)\}\}/g, (_, fmt) => formatDate(fmt, date));
+
+  // {{date}} -> formatted date using the filename template (preference)
+  const prefs = getPreferenceValues<Preferences>();
+  result = result.replace(/\{\{date\}\}/g, formatDate(prefs.filenameTemplate, date));
+
+  // {{time:FORMAT}} -> formatted time with custom format
+  result = result.replace(/\{\{time:([^}]+)\}\}/g, (_, fmt) => formatDate(fmt, date));
+
+  // {{time}} -> HH:mm
+  result = result.replace(/\{\{time\}\}/g, formatDate("HH:mm", date));
+
   return result;
 }

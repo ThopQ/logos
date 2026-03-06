@@ -39,6 +39,27 @@
       ]
     },
     {
+      "name": "task",
+      "title": "Task",
+      "subtitle": "Add Todo",
+      "description": "Add a todo item to today's daily note",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "text",
+          "placeholder": "Todo text",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "duration",
+          "placeholder": "Duration (e.g. 30min)",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "reflect",
       "title": "Reflect",
       "subtitle": "Today's Notes",
