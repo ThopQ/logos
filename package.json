@@ -65,6 +65,13 @@
       "subtitle": "Today's Notes",
       "description": "View today's timestamped notes in a list",
       "mode": "view"
+    },
+    {
+      "name": "focus",
+      "title": "Focus",
+      "subtitle": "View Tasks",
+      "description": "View today's tasks, toggle completion, and track time",
+      "mode": "view"
     }
   ],
   "preferences": [

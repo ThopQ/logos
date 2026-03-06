@@ -1,7 +1,7 @@
 import { LaunchProps, getPreferenceValues, showHUD } from "@raycast/api";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, statSync } from "fs";
 import { join } from "path";
-import { Preferences, formatDate, processTemplate } from "./shared";
+import { Preferences, formatDate, processTemplate, getFrontmatterEnd, findSeparatorIndex } from "./shared";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -25,35 +25,7 @@ function buildTodoLine(text: string, duration?: string): string {
   return `${checkbox}${durationPart} ${cleanText}`;
 }
 
-// ---------------------------------------------------------------------------
-// Separator helpers
-// ---------------------------------------------------------------------------
-
 const SEPARATOR = "---";
-
-/**
- * Detect YAML frontmatter and return the line index after the closing `---`.
- * Returns 0 if no frontmatter is present.
- */
-function getFrontmatterEnd(lines: string[]): number {
-  if (lines.length < 2 || !lines[0].trimEnd().startsWith(SEPARATOR)) return 0;
-  for (let i = 1; i < lines.length; i++) {
-    if (lines[i].trim() === SEPARATOR) return i + 1;
-  }
-  return 0; // unclosed frontmatter — treat as no frontmatter
-}
-
-/**
- * Find the index of the first `---` line in the content lines,
- * starting from `startFrom` to skip past YAML frontmatter.
- * Returns -1 if no separator is found.
- */
-function findSeparatorIndex(lines: string[], startFrom = 0): number {
-  for (let i = startFrom; i < lines.length; i++) {
-    if (lines[i].trim() === SEPARATOR) return i;
-  }
-  return -1;
-}
 
 // ---------------------------------------------------------------------------
 // Main command
