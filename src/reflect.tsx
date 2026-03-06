@@ -96,7 +96,7 @@ export default function reflect() {
             key={entry.id}
             id={entry.id}
             title={entry.text}
-            accessories={[...entry.tags.map((tag) => ({ tag })), { text: entry.timestamp, icon: Icon.Clock }]}
+            accessories={[{ tag: entry.timestamp, icon: Icon.Clock }]}
             detail={<List.Item.Detail markdown={entry.raw} />}
             actions={
               <ActionPanel>
