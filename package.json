@@ -37,6 +37,13 @@
           "required": false
         }
       ]
+    },
+    {
+      "name": "reflect",
+      "title": "Reflect",
+      "subtitle": "Today's Notes",
+      "description": "View today's timestamped notes in a list",
+      "mode": "view"
     }
   ],
   "preferences": [
